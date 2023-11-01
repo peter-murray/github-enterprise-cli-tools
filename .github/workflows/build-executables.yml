@@ -1,0 +1,41 @@
+name: Build Bundle Executables
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Executable
+        run: npm run build-exe
+
+      - name: Attach Linux artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux
+          path: cli/*-linux
+
+      - name: Attach MacOS artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos
+          path: cli/*-macos
+
+      - name: Attach Windows artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows
+          path: cli/*-win.exe
